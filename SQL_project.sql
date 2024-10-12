@@ -185,3 +185,60 @@ VALUES
 
 SELECT * FROM FrequentCustomers;
 
+-- ile każdy klient wydał na wynajem samochodów
+SELECT 
+    c.CustomerID, 
+    c.FirstName, 
+    c.LastName, 
+    SUM(r.TotalAmount) AS TotalSpent
+FROM 
+    Customers c
+JOIN 
+    Rentals r ON c.CustomerID = r.CustomerID
+GROUP BY 
+    c.CustomerID, c.FirstName, c.LastName
+ORDER BY 
+    TotalSpent DESC;
+
+-- Czas wynajmu każdego samochodu
+	SELECT 
+    ca.Make, 
+    ca.Model, 
+    ca.Year, 
+    ca.LicensePlate, 
+    SUM(DATEDIFF(DAY, r.RentalDate, r.ReturnDate)) AS TotalRentalDays,
+    ca.Status
+FROM 
+    Cars ca
+LEFT JOIN 
+    Rentals r ON ca.CarID = r.CarID
+GROUP BY 
+    ca.Make, ca.Model, ca.Year, ca.LicensePlate, ca.Status
+ORDER BY 
+    TotalRentalDays DESC;
+
+-- Najczęściej wybierana metoda płatności
+	SELECT 
+    p.PaymentMethod, 
+    COUNT(p.PaymentID) AS TotalPayments
+FROM 
+    Payments p
+GROUP BY 
+    p.PaymentMethod
+ORDER BY 
+    TotalPayments DESC;
+
+-- Lista dostępnych samochodów
+	SELECT 
+    CarID, 
+    Make, 
+    Model, 
+    Year, 
+    LicensePlate, 
+    DailyRate
+FROM 
+    Cars
+WHERE 
+    Status = 'Dostępny';
+
+
